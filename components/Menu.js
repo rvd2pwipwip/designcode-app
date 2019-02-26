@@ -3,6 +3,17 @@ import styled from "styled-components";
 import { Animated, TouchableOpacity, Dimensions } from "react-native";
 import { Icon } from "expo";
 import MenuItem from "./MenuItem";
+import { connect } from "react-redux";
+
+function mapStateToProps(state) {
+  return { action: state.action };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    closeMenu: () => dispatch({ type: "CLOSE_MENU" })
+  };
+}
 
 const screenHeight = Dimensions.get("window").height;
 
@@ -12,15 +23,24 @@ class Menu extends Component {
   };
 
   componentDidMount() {
-    Animated.spring(this.state.top, {
-      toValue: 0
-    }).start();
+    this.toggleMenu();
+  }
+
+  componentDidUpdate() {
+    this.toggleMenu();
   }
 
   toggleMenu = () => {
-    Animated.spring(this.state.top, {
-      toValue: screenHeight
-    }).start();
+    if (this.props.action == "openMenu") {
+      Animated.spring(this.state.top, {
+        toValue: 0
+      }).start();
+    }
+    if (this.props.action == "closeMenu") {
+      Animated.spring(this.state.top, {
+        toValue: screenHeight
+      }).start();
+    }
   };
 
   render() {
@@ -32,7 +52,7 @@ class Menu extends Component {
           <Subtitle>UX Designer at Stingray</Subtitle>
         </Cover>
         <TouchableOpacity
-          onPress={this.toggleMenu}
+          onPress={this.props.closeMenu}
           style={{
             position: "absolute",
             top: 120,
@@ -60,7 +80,10 @@ class Menu extends Component {
   }
 }
 
-export default Menu;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Menu);
 
 const Container = styled.View`
   position: absolute;
