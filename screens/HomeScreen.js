@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
-  StatusBar
+  StatusBar,
+  Platform
 } from "react-native";
 import styled from "styled-components";
 import Card from "../components/Card";
@@ -83,6 +84,7 @@ class HomeScreen extends React.Component {
 
   componentDidUpdate() {
     this.toggleMenu();
+    if (Platform.OS == "android") StatusBar.setBarStyle("light-content", true);
   }
 
   toggleMenu = () => {
@@ -151,7 +153,7 @@ class HomeScreen extends React.Component {
                   <Logo key={i} image={l.image} text={l.text} />
                 ))}
               </ScrollView>
-              <Subtitle>Continue Learning</Subtitle>
+              <Subtitle>{"Continue Learning".toUpperCase()}</Subtitle>
               <ScrollView
                 horizontal={true}
                 style={{ paddingBottom: 30 }}
@@ -205,19 +207,21 @@ class HomeScreen extends React.Component {
                   </TouchableOpacity>
                 ))} */}
               </ScrollView>
-              <Subtitle>Popular Courses</Subtitle>
-              {courses.map((c, i) => (
-                <Course
-                  key={i}
-                  image={c.image}
-                  logo={c.logo}
-                  subtitle={c.subtitle}
-                  title={c.title}
-                  avatar={c.avatar}
-                  caption={c.caption}
-                  author={c.author}
-                />
-              ))}
+              <Subtitle>{"Popular Courses".toUpperCase()}</Subtitle>
+              <CoursesContainer>
+                {courses.map((c, i) => (
+                  <Course
+                    key={i}
+                    image={c.image}
+                    logo={c.logo}
+                    subtitle={c.subtitle}
+                    title={c.title}
+                    avatar={c.avatar}
+                    caption={c.caption}
+                    author={c.author}
+                  />
+                ))}
+              </CoursesContainer>
             </ScrollView>
           </SafeAreaView>
         </AnimatedContainer>
@@ -240,6 +244,7 @@ const Message = styled.Text`
 
 const CardsContainer = styled.View`
   flex-direction: row;
+  padding-left: 10px;
 `;
 
 const RootView = styled.View`
@@ -268,6 +273,12 @@ const TitleBar = styled.View`
 //   background: black;
 //   border-radius: 22px;
 // `;
+
+const CoursesContainer = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding-left: 10px;
+`;
 
 const Title = styled.Text`
   font-size: 16px;
